@@ -82,6 +82,24 @@ public class JMusicBot
         config.load();
         if(!config.isValid())
             return;
+
+        GUI gui = null;
+        
+        if(!prompt.isNoGUI())
+        {
+            try
+            {
+                gui = new GUI();
+                gui.init();
+            }
+            catch(Exception e)
+            {
+                LOG.error("Could not start GUI. If you are "
+                        + "running on a server or in a location where you cannot display a "
+                        + "window, please run in nogui mode using the -Dnogui=true flag.");
+            }
+        }
+        
         LOG.info("Loaded config from " + config.getConfigLocation());
 
         // set log level from config
@@ -91,27 +109,11 @@ public class JMusicBot
         // set up the listener
         EventWaiter waiter = new EventWaiter();
         SettingsManager settings = new SettingsManager();
-        Bot bot = new Bot(waiter, config, settings);
+        Bot bot = new Bot(waiter, config, settings, gui);
+        if (gui != null)
+            gui.setBot(bot);    
         CommandClient client = createCommandClient(config, settings, bot);
-        
-        
-        if(!prompt.isNoGUI())
-        {
-            try 
-            {
-                GUI gui = new GUI(bot);
-                bot.setGUI(gui);
-                gui.init();
 
-                LOG.info("Loaded config from " + config.getConfigLocation());
-            }
-            catch(Exception e)
-            {
-                LOG.error("Could not start GUI. If you are "
-                        + "running on a server or in a location where you cannot display a "
-                        + "window, please run in nogui mode using the -Dnogui=true flag.");
-            }
-        }
         
         // attempt to log in and start
         try

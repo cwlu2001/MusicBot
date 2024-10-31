@@ -92,15 +92,19 @@ public class Listener extends ListenerAdapter
             YoutubeOauth2TokenHandler.Data data = bot.getYouTubeOauth2Handler().getData();
             if (data != null)
             {
-                PrivateChannel channel = bot.getJDA().openPrivateChannelById(bot.getConfig().getOwnerId()).complete();
-                channel
-                   .sendMessage(
-                       "# DO NOT AUTHORISE THIS WITH YOUR MAIN GOOGLE ACCOUNT!!!\n"
-                       + "## Create or use an alternative/burner Google account!\n"
-                       + "To give JMusicBot access to your Google account, go to "
-                       + data.getAuthorisationUrl()
-                       + " and enter the code **" + data.getCode() + "**")
-                   .queue();
+                try
+                {
+                    PrivateChannel channel = bot.getJDA().openPrivateChannelById(bot.getConfig().getOwnerId()).complete();
+                    channel
+                       .sendMessage(
+                           "# DO NOT AUTHORISE THIS WITH YOUR MAIN GOOGLE ACCOUNT!!!\n"
+                           + "## Create or use an alternative/burner Google account!\n"
+                           + "To give JMusicBot access to your Google account, go to "
+                           + data.getAuthorisationUrl()
+                           + " and enter the code **" + data.getCode() + "**")
+                       .queue();
+                }
+                catch (Exception ignored) {}
             }
         }
     }
